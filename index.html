@@ -13,13 +13,56 @@
     <h1>Titulo</h1>
     <p>Párrafo agregado</p>
 
-    <input type="button" value="Saludar" onclick="saludo()">
-    <input type="button" value="Saludo 2" onclick="saludo2()">
+    <!-- <input type="button" value="Saludar" onclick="saludo()">
+    <input type="button" value="Saludo 2" onclick="saludo2()"> -->
+
+    <input type="text" name="volumen" id="">
+    <input type="text" name="tipo_volumen" id="">
+    <input type="text" name="silenciar" id="">
+
+    <button id="btn">Boton</button>
 
     <script src="js/javascript.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+
+            var g;
+            $.ajax({
+                    type: "GET",
+                    url: "https://pruebas.horaciopuentesmedina.com.mx/Controller_pc/carga_estatus",
+                    dataType: "json"
+                })
+                .done(function(data) {
+                    g = data;
+                })
+                .fail(function(data) {
+                    $('body').html(data.responseText);
+                });
+
+
+            $("#btn").click(function() {
+                tags_validacion("body > input", g, "mi_clase");
+            });
+
+
+
+            function tags_validacion(find_inputs, json_array, tag_class) {
+
+                $('.' + tag_class).remove();
+
+                for (var i = 0; i < $(find_inputs).length; i++) {
+                    $.each(json_array, function(key, element) {
+
+                        if ($(find_inputs)[i].getAttribute('name') == key) {
+
+                            $('<p>' + element + '</p>').addClass(tag_class).insertAfter($(find_inputs)[i]);
+                        }
+                    });
+                }
+            }
+        });
+    </script>
 </body>
-
-
-<p>Otro párrafo</p>
 
 </html>
